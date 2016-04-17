@@ -7,6 +7,7 @@
 from data_base import MySQL
 import numpy as np
 import matplotlib.pyplot as plt
+import  pandas as pd
 
 
 def fetch_data():
@@ -15,7 +16,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain_length FROM domain_features_copy'
+    sql = 'SELECT tld FROM domain_features_copy'
     db.query(sql)
     domains_length = db.fetch_all_rows()
     db.close()
@@ -30,7 +31,7 @@ def create_data_array():
     domains = fetch_data()  # domain基础数据
     domain_length = []  # domain的长度
     for line in domains:
-        domain_length.append(int(line[0]))
+        domain_length.append(line[0])
     domain_length = np.array(domain_length)
     return domain_length
 
@@ -40,15 +41,17 @@ def draw(domain_length):
     绘制柱装图
     :param domain_length:
     """
-    x = []
-    y = []
-    domain_count = np.bincount(domain_length)
-    ii = np.nonzero(domain_count)[0]
-    print zip(ii,domain_count[ii])
-    for i,j in zip(ii,domain_count[ii]):
-        x.append(i)
-        y.append(j)
-    plt.bar(x,y,align='center')
+    x_label = []
+    x = pd.value_counts(pd.Series(domain_length)).index[:25]
+    y = pd.value_counts(pd.Series(domain_length)).values[:25]
+    for label in x:
+        x_label.append(str(label))
+    x = np.arange(len(y))
+    fig =plt.figure()
+    ax = fig.add_subplot(111)
+    ax.bar(x,y)
+    ax.set_xticks(x)
+    ax.set_xticklabels(x_label,rotation=50)
     plt.grid()
     plt.show()
 

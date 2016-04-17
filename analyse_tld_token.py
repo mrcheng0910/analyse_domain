@@ -15,7 +15,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain_length FROM domain_features_copy'
+    sql = 'SELECT tld_token_count FROM domain_features'
     db.query(sql)
     domains_length = db.fetch_all_rows()
     db.close()
@@ -49,7 +49,6 @@ def draw(domain_length):
         x.append(i)
         y.append(j)
     plt.bar(x,y,align='center')
-    plt.grid()
     plt.show()
 
 
