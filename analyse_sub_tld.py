@@ -49,7 +49,6 @@ def draw(entire_tlds,sub_tlds,first_tlds):
     :param entire_tlds:
     """
     fig =plt.figure()
-
     x_label = []
     x = pd.value_counts(pd.Series(entire_tlds)).index[:20]
     y = pd.value_counts(pd.Series(entire_tlds)).values[:20]
@@ -64,8 +63,8 @@ def draw(entire_tlds,sub_tlds,first_tlds):
     plt.grid()
 
     x_label = []
-    x = pd.value_counts(pd.Series(sub_tlds)).index[:20]
-    y = pd.value_counts(pd.Series(sub_tlds)).values[:20]
+    x = pd.value_counts(pd.Series(sub_tlds)).index[:20]  # 去重
+    y = pd.value_counts(pd.Series(sub_tlds)).values[:20]  # 去重
     for label in x:
         x_label.append(str(label))
     x = np.arange(len(y))
