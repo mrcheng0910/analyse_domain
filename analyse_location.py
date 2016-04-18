@@ -1,13 +1,14 @@
 #!/usr/bin/python
 # encoding:utf-8
 """
-每个位置出现字母/数字/特殊字符的频率
+统计域名某个长度内，每个位置出现字母/数字/特殊字符的频率
 """
 
-from data_base import MySQL
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
+
+from data_base import MySQL
 
 rcParams['font.family'] = 'SimHei'  # 支持中文字体
 
@@ -18,11 +19,11 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain FROM domain_features limit 50000'
+    sql = 'SELECT domain FROM domain_features limit 100000'
     db.query(sql)
-    tlds = db.fetch_all_rows()
+    domains = db.fetch_all_rows()
     db.close()
-    return tlds
+    return domains
 
 
 def create_data_array():
@@ -31,21 +32,21 @@ def create_data_array():
     :return: 数据集合
     """
     domains_data = fetch_data()  # tld基础数据
-    domain_length = 15
-    domains = np.zeros((37,70))
-
+    domain_length = 70   # 该长度根据测试数据集的最长域名来设置
+    loc_char_count = np.zeros((37, domain_length))  # 初始化二维列表，域名位置字符计数
 
     for line in domains_data:
         for index_char,char in enumerate(line[0]):
-            char_num = judge_char_num(char)
-            domains[char_num][index_char] += 1
+            char_num = judge_char_num(char)  # 获得域名组成字符编号
+            loc_char_count[char_num][index_char] += 1
 
-    return domains
+    return loc_char_count
+
 
 def judge_char_num(char):
 
     ascii_value = ord(char)
-    if 48 <= ascii_value <=57:
+    if 48 <= ascii_value <= 57:
         return ascii_value-48
     elif 97 <= ascii_value <= 122:  # To find occurrences of [a-z]
         return ascii_value-97+11
@@ -58,20 +59,68 @@ def judge_char_num(char):
 def draw(domains):
     """
     绘制柱装图
-    :param digits_chars:
+    :param domains:
     """
-    fig =plt.figure()
+    domain_location_num = 10  # 统计的域名位置个数
+    fig = plt.figure()
     y = domains
-    x = np.arange(10)
-    ax1 = fig.add_subplot(111)
-    for i in range(11,15):
-        ax1.plot(x,y[i][:10],label=str(i))
+    x = np.arange(1,domain_location_num+1)
+    symbol = ['-^','-v','->','-D','-<','-x','-d','-.']  # 线类型
+    # 第一个图像设置(0-5)
+    ax1 = fig.add_subplot(231)
+    for i in range(0,6):
+        ax1.plot(x,y[i][:10], symbol[i],label=chr(i+48), linewidth='1.5')
+    ax1.legend()
+    ax1.grid()
+    plt.xlabel(u"域名位置")
+    plt.ylabel(u"出现次数")
 
-    # ax1.plot(x,y,'r')
-    # ax1.set_xticks(x)
-    # ax1.set_xticklabels(x_label)
-    plt.legend()
-    plt.grid()
+    #第二个图像设置(6-10,-)
+    ax2 = fig.add_subplot(232)
+    for i in range(6,10):
+        ax2.plot(x,y[i][:10],symbol[i-6],label=chr(i+48),linewidth='1.5')
+    ax2.plot(x,y[10][:10],symbol[6],label='-',linewidth='1.5')  # 设置'-'
+    ax2.legend()
+    ax2.grid()
+    plt.xlabel(u"域名位置")
+    plt.ylabel(u"出现次数")
+
+    # 设置第三个图像(a-f)
+    ax3 = fig.add_subplot(233)
+    for i in range(11,17):
+        ax3.plot(x,y[i][:10],symbol[i-11],label=chr(i+97-11), linewidth='1.5')
+    ax3.legend()
+    ax3.grid()
+    plt.xlabel(u"域名位置")
+    plt.ylabel(u"出现次数")
+
+    # 设置第四个图像(g-m)
+    ax4 = fig.add_subplot(234)
+    for i in range(17,24):
+        ax4.plot(x,y[i][:10],symbol[i-17],label=chr(i+97-11), linewidth='1.5')
+    ax4.legend()
+    ax4.grid()
+    plt.xlabel(u"域名位置")
+    plt.ylabel(u"出现次数")
+
+    # 设置第五个图像(n-t)
+    ax5 = fig.add_subplot(235)
+    for i in range(24,31):
+        ax5.plot(x,y[i][:10],symbol[i-24],label=chr(i+97-11), linewidth='1.5')
+    ax5.legend()
+    ax5.grid()
+    plt.xlabel(u"域名位置")
+    plt.ylabel(u"出现次数")
+
+    # 设置第六个图像(u-z)
+    ax6 = fig.add_subplot(236)
+    for i in range(31,37):
+        ax6.plot(x, y[i][:10], symbol[i-31], label=chr(i+97-11), linewidth='1.5')
+    ax6.legend()
+    ax6.grid()
+    plt.xlabel(u"域名位置")
+    plt.ylabel(u"出现次数")
+    plt.savefig('test.png',dpi=150)
     plt.show()
 
 
