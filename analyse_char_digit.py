@@ -16,7 +16,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain_characters,domain_digit FROM domain_features limit 500000'
+    sql = 'SELECT domain_characters,domain_digit FROM domain_features limit 5000'
     db.query(sql)
     tlds = db.fetch_all_rows()
     db.close()
@@ -42,48 +42,33 @@ def create_data_array():
         digit_char_count.append(np.count_nonzero(digits.T[i]))
     for i in range(27):
         digit_char_count.append(np.count_nonzero(chars.T[i]))
-
-    return chars.mean(axis=0)/100,digits.mean(axis=0)/100,digit_char_count
-
-def get_digit_char_count(digits_chars):
-    digit_char_counts = []
-    for i in range(37):
-        digit_char_counts.append(np.count_nonzero(digits_chars.T[i]))
-    return digit_char_counts
+    digit_char_count = np.array(digit_char_count)
+    return chars.mean(axis=0),digits.mean(axis=0),digit_char_count/float(digit_char_count.sum())*100
 
 
-def draw(digits_chars,digit_char_count):
+def draw(digits_chars, digit_char_count):
     """
     绘制柱装图
     :param digits_chars:
     """
-    fig =plt.figure()
+    fig = plt.figure()
     y = digits_chars
     y1 = digit_char_count
     x = np.arange(len(y))
     x_label_digit = [i for i in range(10)]
     x_label_char = [chr(i) for i in range(97,123)]
-    x_label_char.insert(0,'-')
-    x_label = x_label_digit+x_label_char
-    ax1 = fig.add_subplot(111)
-    ax1.plot(x,y,'r',label=u"频率")
-    ax1.legend(loc=1)
-    ax1.set_xticks(x)
-    ax1.set_xticklabels(x_label)
-    ax2 = ax1.twinx()
-    ax2.plot(x,y1,'k--',label=u"次数")
-    ax2.legend(loc=2)
-    # plt.legend()
-    plt.grid()
-
-
-    # ax2 = fig.add_subplot(122)
-    # ax2.plot(x,y1)
-    # ax2.set_xticks(x)
-    # ax2.set_xticklabels(x_label)
-    # # plt.legend()
-    # plt.grid()
-
+    x_label_char.insert(0, '-')
+    x_label = x_label_digit + x_label_char
+    fig.add_subplot(111)
+    plt.plot(x, y, 'k-o', label=u"字符出现次数",linewidth='1.0')
+    plt.plot(x, y1, 'r-^', label=u"域名含有字符", linewidth='1.0')
+    plt.legend(prop={'size':12})
+    x_min,x_max = x.min(), x.max()
+    plt.xlim(x_min-1,x_max+1)
+    plt.xticks(x,x_label)  # x坐标显示内容
+    plt.grid(axis='y')
+    plt.xlabel(u"字符")
+    plt.ylabel(u"所占比例(%)")
     plt.show()
 
 

@@ -21,7 +21,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain FROM domain_features limit 10000'
+    sql = 'SELECT domain FROM domain_features limit 500000'
     db.query(sql)
     domains = db.fetch_all_rows()
     db.close()
@@ -84,7 +84,6 @@ def create_data_array():
     fifth_loc = Series(fifth_loc).sort_values(ascending=False)
     sixth_loc = Series(sixth_loc).sort_values(ascending=False)
     return first_loc,second_loc,third_loc,fourth_loc,fifth_loc,sixth_loc
-
 
 
 def draw(first_loc,second_loc,third_loc,fourth_loc,fifth_loc,sixth_loc):

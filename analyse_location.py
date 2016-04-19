@@ -120,13 +120,13 @@ def draw(domains):
     ax6.grid()
     plt.xlabel(u"域名位置")
     plt.ylabel(u"出现次数")
-    plt.savefig('test.png',dpi=150)
+    plt.savefig(u'分布.png',dpi=150)
     plt.show()
 
 
 def main():
-    domains = create_data_array()
-    draw(domains)
+    loc_char_count = create_data_array()
+    draw(loc_char_count)
 
 if __name__ == '__main__':
     main()
