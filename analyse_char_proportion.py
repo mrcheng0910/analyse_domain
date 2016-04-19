@@ -10,13 +10,15 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 rcParams['font.family'] = 'SimHei'  # 支持中文字体
+
+
 def fetch_data():
     """
     从数据库中获取域名长度(domain_length)基础数据
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain_characters,domain_digit FROM domain_features limit 5000'
+    sql = 'SELECT domain_characters,domain_digit FROM domain_features limit 300'
     db.query(sql)
     tlds = db.fetch_all_rows()
     db.close()
@@ -69,6 +71,8 @@ def draw(digits_chars, digit_char_count):
     plt.grid(axis='y')
     plt.xlabel(u"字符")
     plt.ylabel(u"所占比例(%)")
+    plt.subplots_adjust(top=0.96, bottom=0.09, left=0.06, right=0.96)
+    plt.savefig(u'域名出现次数与频率比较.png')
     plt.show()
 
 

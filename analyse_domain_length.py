@@ -7,6 +7,8 @@
 from data_base import MySQL
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
+rcParams['font.family'] = 'SimHei'  # 支持中文字体
 
 
 def fetch_data():
@@ -15,7 +17,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain_length FROM domain_features_copy'
+    sql = 'SELECT domain_length FROM domain_features'
     db.query(sql)
     domains_length = db.fetch_all_rows()
     db.close()
@@ -42,14 +44,27 @@ def draw(domain_length):
     """
     x = []
     y = []
+    top_length = 25
     domain_count = np.bincount(domain_length)
     ii = np.nonzero(domain_count)[0]
     print zip(ii,domain_count[ii])
     for i,j in zip(ii,domain_count[ii]):
         x.append(i)
         y.append(j)
-    plt.bar(x,y,align='center')
-    plt.grid()
+    x = np.array(x)
+    y = np.array(y)/1000
+    plt.bar(x[:top_length],y[:top_length],align='center',label=u"域名个数")
+    plt.plot(x[:top_length],y[:top_length],'k--',linewidth='1.5',label=u"趋势")
+    plt.grid(axis='y')
+    plt.xlabel(u"域名长度")
+    plt.ylabel(u"个数(K)")
+    x_min,x_max = x[:top_length].min(),x[:top_length].max()
+    y_min,y_max = y[:top_length].min(),y[:top_length].max()
+    plt.xlim(x_min,x_max+1)
+    plt.ylim(y_min,y_max+2)
+    plt.legend(prop={'size':12})
+    plt.subplots_adjust(top=0.96, bottom=0.09, left=0.1, right=0.96)
+    plt.savefig(u'域名长度分布.png')
     plt.show()
 
 
