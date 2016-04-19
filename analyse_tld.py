@@ -7,7 +7,11 @@
 from data_base import MySQL
 import numpy as np
 import matplotlib.pyplot as plt
-import  pandas as pd
+import pandas as pd
+
+from matplotlib import rcParams
+
+rcParams['font.family'] = 'SimHei'  # 支持中文字体
 
 
 def fetch_data():
@@ -16,7 +20,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT tld FROM domain_features_copy'
+    sql = 'SELECT tld FROM domain_features'
     db.query(sql)
     domains_length = db.fetch_all_rows()
     db.close()
@@ -43,16 +47,23 @@ def draw(domain_length):
     """
     x_label = []
     x = pd.value_counts(pd.Series(domain_length)).index[:25]
-    y = pd.value_counts(pd.Series(domain_length)).values[:25]
+    y = pd.value_counts(pd.Series(domain_length)).values[:25]/1000.0
     for label in x:
         x_label.append(str(label))
     x = np.arange(len(y))
-    fig =plt.figure()
-    ax = fig.add_subplot(111)
-    ax.bar(x,y)
-    ax.set_xticks(x)
-    ax.set_xticklabels(x_label,rotation=50)
-    plt.grid()
+    fig = plt.figure()
+    fig.add_subplot(111)
+    plt.bar(x,y,align='center')
+    x_min,x_max = x.min(), x.max()
+    y_min,y_max = y.min(), y.max()
+    plt.xlabel(u'顶级域名')
+    plt.ylabel(u'域名个数(K)')
+    plt.xlim(x_min-1, x_max+1)
+    plt.ylim(y_min, y_max+10)
+    plt.xticks(x,x_label,rotation=50)
+    plt.grid(axis='y')
+    plt.subplots_adjust(top=0.95,bottom=0.15,left=0.08,right=0.97)
+    plt.savefig(u"各个顶级域名含有的域名数量",dpi=140)
     plt.show()
 
 
