@@ -19,7 +19,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain FROM domain_features limit 1000000'
+    sql = 'SELECT domain FROM domain_features limit 1000'
     db.query(sql)
     domains = db.fetch_all_rows()
     db.close()
@@ -128,7 +128,8 @@ def draw(domains):
 
 def main():
     loc_char_count = create_data_array()
-    draw(loc_char_count)
+    print loc_char_count
+    # draw(loc_char_count)
 
 if __name__ == '__main__':
     main()

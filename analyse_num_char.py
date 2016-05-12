@@ -21,7 +21,7 @@ def fetch_data():
     :return: 返回基础数据
     """
     db = MySQL()
-    sql = 'SELECT domain FROM domain_features limit 500000'
+    sql = 'SELECT domain FROM domain_features'
     db.query(sql)
     domains = db.fetch_all_rows()
     db.close()
@@ -93,12 +93,12 @@ def draw(first_loc,second_loc,third_loc,fourth_loc,fifth_loc,sixth_loc):
     """
     fig = plt.figure()
 
-    fig.add_subplot(231)
+    fig.add_subplot(221)
     y = first_loc.values
     x_label =  first_loc.index
     x = np.arange(len(x_label))
-    plt.plot(x,y/1000.0,'k--',linewidth='2.0',label=u"趋势")
-    plt.bar(x,y/1000.0,color='g',align='center',label=u"次数")
+    plt.plot(x,y/1000.0, 'k--', linewidth='2.0', label=u"趋势")
+    plt.bar(x,y/1000.0, color='g', align='center', label=u"次数")
     plt.xticks(x,x_label)
     x_min,x_max = x.min(),x.max()
     plt.xlim(x_min-1,x_max+1)
@@ -108,7 +108,13 @@ def draw(first_loc,second_loc,third_loc,fourth_loc,fifth_loc,sixth_loc):
     # plt.xlabel(u"字符")
     plt.ylabel(u"出现次数(K)")
 
-    fig.add_subplot(232)
+    for i in x:
+        print x_label[i],y[i]
+        # print y[i]
+    print x_label
+    print y
+
+    fig.add_subplot(222)
     y = second_loc.values
     x_label = second_loc.index
     x = np.arange(len(x_label))
@@ -123,7 +129,7 @@ def draw(first_loc,second_loc,third_loc,fourth_loc,fifth_loc,sixth_loc):
     # plt.xlabel(u"字符")
     # plt.ylabel(u"出现次数")
 
-    fig.add_subplot(233)
+    fig.add_subplot(223)
     y = third_loc.values
     x_label = third_loc.index
     x = np.arange(len(x_label))
@@ -135,10 +141,10 @@ def draw(first_loc,second_loc,third_loc,fourth_loc,fifth_loc,sixth_loc):
     # plt.grid()
     plt.legend()
     plt.title(u"域名第3位置")
-    # plt.xlabel(u"字符")
-    # plt.ylabel(u"出现次数")
+    plt.xlabel(u"字符")
+    plt.ylabel(u"出现次数")
 
-    fig.add_subplot(234)
+    fig.add_subplot(224)
     y = fourth_loc.values
     x_label = fourth_loc.index
     x = np.arange(len(x_label))
@@ -151,37 +157,37 @@ def draw(first_loc,second_loc,third_loc,fourth_loc,fifth_loc,sixth_loc):
     plt.title(u"域名第4位置")
     plt.legend()
     plt.xlabel(u"字符")
-    plt.ylabel(u"出现次数(K)")
+    # plt.ylabel(u"出现次数(K)")
 
-    fig.add_subplot(235)
-    y = fifth_loc.values
-    x_label = fifth_loc.index
-    x = np.arange(len(x_label))
-    plt.plot(x, y/1000.0, 'k--',linewidth='2.0',label=u"趋势")
-    plt.bar(x, y/1000.0, color='g',align='center',label=u"次数")
-    plt.xticks(x,x_label)
-    x_min,x_max = x.min(), x.max()
-    plt.xlim(x_min-1,x_max+1)
-    # plt.grid()
-    plt.title(u"域名第5位置")
-    plt.legend()
-    plt.xlabel(u"字符")
-    # plt.ylabel(u"出现次数")
-
-    fig.add_subplot(236)
-    y = sixth_loc.values
-    x_label = sixth_loc.index
-    x = np.arange(len(x_label))
-    plt.plot(x, y/1000.0,'k--',linewidth='2.0',label=u"趋势")
-    plt.bar(x, y/1000.0,color='g', align='center',label=u"次数")
-    plt.xticks(x,x_label)
-    x_min,x_max = x.min(),x.max()
-    plt.xlim(x_min-1,x_max+1)
-    # plt.grid()
-    plt.legend()
-    plt.title(u"域名第6位置")
-    plt.xlabel(u"字符")
-    # plt.ylabel(u"出现次数")
+    # fig.add_subplot(235)
+    # y = fifth_loc.values
+    # x_label = fifth_loc.index
+    # x = np.arange(len(x_label))
+    # plt.plot(x, y/1000.0, 'k--',linewidth='2.0',label=u"趋势")
+    # plt.bar(x, y/1000.0, color='g',align='center',label=u"次数")
+    # plt.xticks(x,x_label)
+    # x_min,x_max = x.min(), x.max()
+    # plt.xlim(x_min-1,x_max+1)
+    # # plt.grid()
+    # plt.title(u"域名第5位置")
+    # plt.legend()
+    # plt.xlabel(u"字符")
+    # # plt.ylabel(u"出现次数")
+    #
+    # fig.add_subplot(236)
+    # y = sixth_loc.values
+    # x_label = sixth_loc.index
+    # x = np.arange(len(x_label))
+    # plt.plot(x, y/1000.0,'k--',linewidth='2.0',label=u"趋势")
+    # plt.bar(x, y/1000.0,color='g', align='center',label=u"次数")
+    # plt.xticks(x,x_label)
+    # x_min,x_max = x.min(),x.max()
+    # plt.xlim(x_min-1,x_max+1)
+    # # plt.grid()
+    # plt.legend()
+    # plt.title(u"域名第6位置")
+    # plt.xlabel(u"字符")
+    # # plt.ylabel(u"出现次数")
 
     plt.subplots_adjust(wspace=0.1,hspace=0.2,left=0.05,right=0.97)
     plt.savefig(u"域名前6位置各个域名出现频率",dpi=140)

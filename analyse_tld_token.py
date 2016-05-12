@@ -7,7 +7,9 @@
 from data_base import MySQL
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
 
+rcParams['font.family'] = 'SimHei'  # 支持中文字体
 
 def fetch_data():
     """
@@ -48,7 +50,16 @@ def draw(domain_length):
     for i,j in zip(ii,domain_count[ii]):
         x.append(i)
         y.append(j)
-    plt.bar(x,y,align='center')
+    x = np.array(x)
+    y = np.array(y)/1000.0
+    print x
+    x_min,x_max = x.min(),x.max()
+    plt.bar(x[:2],y[:2],align='center')
+    plt.xticks(x[:2])
+    plt.xlim(x_min-1,x_max+0.5)
+
+    plt.xlabel(u'顶级域名级数')
+    plt.ylabel(u'域名数量（K）')
     plt.show()
 
 

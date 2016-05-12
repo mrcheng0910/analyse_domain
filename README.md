@@ -1,6 +1,6 @@
 # analyse_domain
 分析Alexa域名排名top100万中，域名的组成规律
-
+并且根据马尔可夫链生成域名
 ## 分析特征
 1. domain_token_count，域名分段个数
 2. domain_length，域名长度

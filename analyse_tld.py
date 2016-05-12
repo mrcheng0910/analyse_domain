@@ -21,6 +21,7 @@ def fetch_data():
     """
     db = MySQL()
     sql = 'SELECT tld FROM domain_features'
+    sql = 'SELECT SUBSTRING_INDEX(tld,".",-1) as a FROM domain_features'
     db.query(sql)
     domains_length = db.fetch_all_rows()
     db.close()
@@ -61,7 +62,7 @@ def draw(domain_length):
     plt.xlim(x_min-1, x_max+1)
     plt.ylim(y_min, y_max+10)
     plt.xticks(x,x_label,rotation=50)
-    plt.grid(axis='y')
+    # plt.grid(axis='y')
     plt.subplots_adjust(top=0.95,bottom=0.15,left=0.08,right=0.97)
     plt.savefig(u"各个顶级域名含有的域名数量",dpi=140)
     plt.show()
